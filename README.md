@@ -24,6 +24,34 @@
 | 清单 | `cordis.patch.yml` | 只 insert 一行宿主插件 `id: penpot` |
 | 编解码 | `lib/transit.js` | 无依赖的 transit+json 实现（Penpot RPC 与 `/api/export` 都是 transit） |
 
+### 数据流
+
+```mermaid
+flowchart LR
+  subgraph Browser["DSH Web GUI"]
+    Tab["侧栏 tab<br/>Penpot"]
+    Editor["Penpot SPA<br/>(iframe)"]
+    PP["Penpot 内建 MCP 插件<br/>(Penpot 自带)"]
+  end
+  subgraph Host["DSH 宿主 (cordis)"]
+    Proxy["反代 :9002<br/>剥 frame 头 / 改写 config.js / 注入 cookie"]
+    Tools["11 个 penpot_* 模型工具"]
+    MCPClient["MCP 客户端<br/>JSON + SSE"]
+  end
+  Penpot["Penpot 后端 :9001<br/>RPC + /api/export + /mcp/stream"]
+  Exporter["exporter :6061<br/>(playwright 渲染)"]
+
+  Tab --> Editor
+  Editor <--> Proxy
+  Proxy <--> Penpot
+  Editor <-->|WebSocket| PP
+  PP <-->|/mcp/ws| Proxy
+  Tools -->|access token| Penpot
+  Tools --> MCPClient
+  MCPClient -->|execute_code| Penpot
+  Penpot --> Exporter
+```
+
 ### 为什么需要一个反代端口
 
 Penpot 响应头带 `X-Frame-Options: SAMEORIGIN`，并且把公开地址（`PENPOT_PUBLIC_URI`）写死在 `/js/config.js` 里，前端所有 API 调用都走这个绝对地址。直接 iframe 会被拒；从别的端口打开又会因为跨源被 CORS 挡住。代理做三件事：
