@@ -1,0 +1,18 @@
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+
+# local scratch / test artifacts
+test/tmp/
+*.log
+*.local.*
+
+# exported boards and other local output
+exports/
+.dsh/
+
+# editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

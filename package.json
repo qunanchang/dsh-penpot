@@ -1,0 +1,70 @@
+{
+  "name": "dsh-penpot",
+  "version": "0.4.0",
+  "description": "Penpot inside DSH: same-origin reverse proxy for the self-hosted editor, a sidebar tab that embeds it, JSON routes for file discovery and board export, and an MCP client that runs code in the open file.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md"
+  ],
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "penpot",
+    "design",
+    "mcp",
+    "reverse-proxy",
+    "cordis"
+  ],
+  "license": "MIT",
+  "author": "qunanchang",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qunanchang/dsh-penpot.git"
+  },
+  "homepage": "https://github.com/qunanchang/dsh-penpot#readme",
+  "bugs": {
+    "url": "https://github.com/qunanchang/dsh-penpot/issues"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-host-webserver": ">=0.2.1-rc.1",
+    "dsh-better-sidebar": "^0.28.0",
+    "react": "^18.2.0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-host-webserver": {
+      "optional": true
+    },
+    "dsh-better-sidebar": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "dsh": {
+    "engines": {
+      "dsh": ">=0.2.1-rc.1"
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "dsh-better-sidebar"
+      ],
+      "immediately": true
+    }
+  }
+}

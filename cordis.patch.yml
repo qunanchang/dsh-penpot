@@ -1,0 +1,13 @@
+# dsh-penpot bundle patch.
+#
+# 只 insert 一行宿主插件：它在 DSH web 的 HTTP 服务器上注册 /penpot/* 路由，
+# 并另起一个同源反代端口（默认 9002）把自托管 Penpot（默认 localhost:9001）
+# 整站转发给浏览器——剥掉 X-Frame-Options / CSP，注入登录 cookie，
+# 于是侧边栏 Tab 里的 iframe 可以像原生页面一样编辑设计稿。
+#
+# 浏览器侧（lib/client.js）由 package.json 的 dsh.client 清单加载，
+# 通过 better-sidebar 的 ctx.betterSidebar.registerTab 注册「Penpot」页签。
+
+- insert:
+    - id: penpot
+      name: 'dsh-penpot'

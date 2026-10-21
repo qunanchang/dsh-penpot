@@ -1,0 +1,11 @@
+import { apply } from '../lib/index.js';
+const tools = [];
+const ctx = { effect(fn) { const d = fn(); return () => {}; }, webServer: { register() { return () => {}; } }, tools: { register(def) { tools.push(def); return () => {}; } } };
+apply(ctx, { penpotOrigin: 'http://localhost:9001', proxyPort: 9009 });
+await new Promise((r) => setTimeout(r, 1200));
+const t = tools.find((x) => x.name === 'penpot_open');
+const files = await tools.find((x) => x.name === 'penpot_files').execute({ refresh: true }, {});
+const f = files.files[0];
+const opened = await t.execute({ file_id: f.id }, {});
+console.log(JSON.stringify({ name: f.name, teamId: !!opened.teamId, pageId: !!opened.pageId, url: opened.url.slice(0, 120) }));
+process.exit(0);
